@@ -14,3 +14,20 @@ compile, resource, surefire<br>
 
 #### 로그 설정하기
 logback.xml , logback-test.xml 생성
+
+#### web.xml 설정하기
+> DispatcherServlet 설정하기
+* 모든 요청(/*)은 DispatcherSerlvet이 처리하도록 한다
+* DispatcherServlet은 contextClass라는 초기화 파라미터로 지정 한 값을 가지고 설정파일을 처리한다.(자바 클래스를 이용한 설정 파일을 사용하므로 AnnotationConfigWebApplicationContext라는 값을 설정)
+* contextConfigLocation으로 위치 지정
+> ContextLoaderListener 설정하기
+* DispatcherServlet만으로도 웹 어플리케이션을 충분히 개발할 수 있으나, 웹 페이지와 Rest API를 한 곳에서 같이 서비스 해야한다면 구조적 모습에서 별로 좋지 않다.
+* 2개의 DispatcherServlet을 생성한다. (두 개의 독립적인 컨텍스트가 생성)
+* 두 컨텍스트는 독립적이므로 서로의 빈(bean)을 참조할 수 없다. 동시에 사용하는 공통 빈이 있는 경우 ContextLoaderListener를 사용한다.
+* ContextLoaderListener는 ApplicationContext를 생성하는데, ApplicationContext는 DispatcherServlet이 생성하는 WebApplicationContext의 부모 컨텍스트가 된다. 다시 말해 DispatcherServlet이 생성하는 WebApplicationContext는 ContextLoaderListener가 생성하는 ApplicationContext를 부모로 사용하는 자식 컨텍스트다.
+* 자식 컨텍스트들은 부모 컨텍스트가 제공하는 빈을 사용할 수 있기 때문에 ContextLoaderListener를 사용하여 공통 빈을 설정할 수 있다.<br>
+
+**일반적으로 데이터 처리와 비즈니스 로직을 처리하는 Model과 관련된 빈들은 ContextLoaderListener를 이용해서 생성하게 하고, Controller와 View에 관련된 빈들은 DispatcherServlet에서 생성하게 한다.**
+
+
+
