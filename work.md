@@ -29,5 +29,12 @@ logback.xml , logback-test.xml 생성
 
 **일반적으로 데이터 처리와 비즈니스 로직을 처리하는 Model과 관련된 빈들은 ContextLoaderListener를 이용해서 생성하게 하고, Controller와 View에 관련된 빈들은 DispatcherServlet에서 생성하게 한다.**
 
+### JavaConfig 설정하기
+Spring JavaConfig의 장점
+* 주입(Injection), 상속, 다형성 등의 기능을 수행할 수 있다.
+* 빈에 대한 생성과 초기화에 대한 모든 권한을 가진다.
+* IDE같은 개발 도구의 도움 없이도 손쉽게 리팩토링 가능
+* 컨테이너 초기화 시 큰 비용이 드는 클래스 패스 스캐닝(Classpath Scanning)을 줄일 수 있다.
+* 필요에 따라 XML 또는 Property 등을 사용할 수 있다.
 
 
