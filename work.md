@@ -88,4 +88,10 @@ ds.setPassword(pasword);
 Connection conn = ds.getConnection();
 ```
 <br>
-AppConfig 설정에 DataSource 추가하기
+DatatSource 생성, 트랜잭션 관리자 생성, SqlSessionFacotry 생성
+
+### AppConfig 설정에 DataSource 추가하기
+### Mapper 구현하기
+ Mapper.xml 구현 -> Mapper interface 생성 -> AppConfig 설정 파일에 Mapper 추가<br>
+ 
+ 

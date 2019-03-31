@@ -95,6 +95,12 @@
             <version>${version.servlet}</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.pojomatic</groupId>
+            <artifactId>pojomatic</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
     <build>
         <finalName>restapp</finalName>
