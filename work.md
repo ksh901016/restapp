@@ -36,5 +36,56 @@ Spring JavaConfig의 장점
 * IDE같은 개발 도구의 도움 없이도 손쉽게 리팩토링 가능
 * 컨테이너 초기화 시 큰 비용이 드는 클래스 패스 스캐닝(Classpath Scanning)을 줄일 수 있다.
 * 필요에 따라 XML 또는 Property 등을 사용할 수 있다.
+<br>
 
+### 애플리케이션 구조
+Controller - Service - DAO
+Controller - 사용자의 요청을 처리
+Service - 비즈니스 로직
+DAO - 데이터를 처리
 
+Controller, View -> 표현 계층(Presentation Layer)
+Service -> 비즈니스 계층(Business Layer)
+DAO -> 영속성 계층(Persistence Layer)
+
+### 데이터베이스 접속 설정
+
+**JDBC DriverManager와 DataSource**
+
+JDBC를 이용하여 데이터베이스에 연결하는 방법은 크게 두 가지가 있다.<br>
+DriverManager를 사용하는 방법과 DataSource를 사용하는 방법이다.<br>
+DriverManager - JDBC 드라이버에서 지원하는 기본 서비스 <br>
+DataSource - JDBC2.0의 javax.sql 패키지에 포함(데이터베이스의 연결자원(Connection)을 만들거나 사용)<br>
+<br>
+DriverManager 사용<br>
+JDBC 드라이버를 직접 이용해서 연결자원을 생성
+```java
+String driveClass = "oracle.jdbc.driver.OracleDriver";
+String url = "jdbc.oracle.thin@somewhere:1524:orcl";
+String username = "user";
+String password = "password";
+
+Class.forName("oracle.jdbc.driver.OracleDriver");
+Connection conn = DriverManager.getConnection(url, username, password);
+```
+<br>
+DataSource 사용<br>
+DataSource를 사용하기 위해서는 우선 DataSource 인터페이스 구현체를 사용<br>
+JDBC에서 제공하는 DataSource 구현체를 사용할 수 있고, DBCP, c3p0, BoneCP 같은 커넥션 풀링 라이브러리에서 제공해주는 DataSource 구현체를 사용할 수도 있다<br>
+BoneCP를 사용한 예제<br>
+
+```java
+String driveClass = "oracle.jdbc.driver.OracleDriver";
+String url = "jdbc.oracle.thin@somewhere:1524:orcl";
+String username = "user";
+String password = "password";
+
+BoneCPDataSource ds = new BoneCPDataSource();
+ds.setDriverClass(driveClass);
+ds.setJdbcUrl(url);
+ds.setUsername(username);
+ds.setPassword(pasword);
+Connection conn = ds.getConnection();
+```
+<br>
+AppConfig 설정에 DataSource 추가하기
