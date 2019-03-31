@@ -94,4 +94,10 @@ DatatSource 생성, 트랜잭션 관리자 생성, SqlSessionFacotry 생성
 ### Mapper 구현하기
  Mapper.xml 구현 -> Mapper interface 생성 -> AppConfig 설정 파일에 Mapper 추가<br>
  
+ ### 테스트케이스 작성 및 테스트
+ Junit4를 이용해서 BookMapper 클래스의 테스트 케이스를 작성한다.<br>
+ @RunWith(SpringJunit4ClassRunner.class) 어노테이션을 사용하여 스프링 설정한 Bean을 인젝션받을 수 있게 한다.<br>
+ 클래스를 스프링 컨텍스트에 적재하려면 @ContextConfiguration(class={AppConfig.class})와 같은 형태로 구성 클래스의 정보를 설정한다.<br>
+ 
+ 
  
