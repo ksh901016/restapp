@@ -1,5 +1,6 @@
 package devfun.bookstore.common.config;
 
+import javafx.application.Platform;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
@@ -9,14 +10,16 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 
 import javax.sql.DataSource;
 
 @MapperScan("devfun.bookstore.common.mapper")
 @Configuration
-public class AppConfig {
+@EnableTransactionManagement
+public class AppConfig implements TransactionManagementConfigurer {
     // 데이터베이스 접속, 트랜잭션 관리, DAO Service를 정의하는 부분 추가
-
     @Bean
     public DataSource dataSource(){
         // 메모리 방식이기 때문에 애플리케이션이 실행될때 HSQLDB가 초기화되면서 메모리에 적재된다.
@@ -32,6 +35,11 @@ public class AppConfig {
     @Bean
     public PlatformTransactionManager transactionManager(){
         return new DataSourceTransactionManager(dataSource());
+    }
+
+    @Override
+    public PlatformTransactionManager annotationDrivenTransactionManager(){
+        return transactionManager(); // reference the existing @Bean method above
     }
 
     @Bean

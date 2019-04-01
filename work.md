@@ -94,10 +94,73 @@ DatatSource 생성, 트랜잭션 관리자 생성, SqlSessionFacotry 생성
 ### Mapper 구현하기
  Mapper.xml 구현 -> Mapper interface 생성 -> AppConfig 설정 파일에 Mapper 추가<br>
  
- ### 테스트케이스 작성 및 테스트
+### 테스트케이스 작성 및 테스트
  Junit4를 이용해서 BookMapper 클래스의 테스트 케이스를 작성한다.<br>
  @RunWith(SpringJunit4ClassRunner.class) 어노테이션을 사용하여 스프링 설정한 Bean을 인젝션받을 수 있게 한다.<br>
  클래스를 스프링 컨텍스트에 적재하려면 @ContextConfiguration(class={AppConfig.class})와 같은 형태로 구성 클래스의 정보를 설정한다.<br>
  
- 
+### Business Layer 구축
+업무로직을 담당하는 계층<br>
+트랜잭션 처리를 비즈니스 계층에서 담당한다.<br>
+비즈니스 계층에서 데이터베이스 연결(Connection)객체를 생성한 다음, 사용하려는 Mapper(DAO)를 호출하여 원하는 작업을 처리하도록 한다.<br>
+정상완료되면 Commit, 에러가 발생하면 Rollback<br>
+
+**트랜잭션 관리** <br>
+스프링에서는 트랜잭션을 직접 처리하지 않고, 선언적으로 관리할 수 있다.<br>
+1. 어노테이션을 이용한 트랜잭션 관리(Annotation Transaction Management)
+2. 설정 정보를 이용한 트랜잭션 관리(Configurational Transaction Management)
+
+<br>
+자바 기반 구성의 스프링에서 트랜잭션관리는 @EnableTrnsactionManagerment를 추가해야한다.<br>
+트랜잭션 관리자(PlatformTransactionManager)를 명시적으로 선언하기 위해서는 TransactionManagementConfigurer 인터페이스를 상속받아 annotationDrivenTransactionManager() 메소드를 구현해야 한다.
+<br>
+<br>
+@Transactional 은 트랜잭션 매니저를 지정하지 않아도 XML 기반 세팅은 기본으로 transactionManager를 디폴트 트랜잭션 매니저로 지정한다.<br>
+하지만 Java Config를 사용할 때는 모든 PlatformTransactionManager 인스턴스를 찾아서 그 중에 하나를 매핑한다.<br>
+따라서 특정 트랜잭션 매니저를 디폴트로 지정하고자 한다면 Java Config 클래스가 TransactionManagementConfigurer 인터페이스를 구현하고 annotationDrivenTransactionManager를 구현해서 트랜잭션 매니저를 리턴해주면 해당 매니저를 사용하게 된다.<br>
+<br>
+
+#### @Transactional 어노테이션 Propagation Behavior/ Isolation Level
+
+**트랜잭션 전파 규칙(Propagation Behavior)**<br>
+보통 트랜잭션 영역 내에서 실행하는 모든 코드는 해당 트랜잭션 내에서 실행된다.<br>
+만약 트랜잭션이 이미 존재하는 상황에서 트랜잭션인 메소드가 실행되는 상황을 대비하여 그 동작을 지정하는 다음과 같은 몇 가지 속성들이 있다.<br>
+<br>
+REQUIRED
+* 기존 트랜잭션이 있으면 기존 트랜잭션 내에서 실행하고, 기존 트랜잭션이 없을 때는 새로운 트랜잭션을 생성하여 실행
+
+SUPPORTS
+* 새로운 트랜잭션이 필요하지는 않지만, 기존 트랜잭션이 있으면 해당트랜잭션 내에서 메소드를 실행한다.
+
+MANDATORY
+* 반드시 트랜잭션 내에서 메소드가 실행되어야 한다. 만약 트랜잭션이 없다면 예외를 발생시킨다.
+
+NOT_SUPPORTED
+* 트랜잭션 없이 실행하고, 기존 트랜잭션이 있으면 잠시 보류한다.
+
+NEVER
+* MANDATORY와 반대로 트랜잭션 없이 실행되어야 한다. 만약 트랜잭션이 있다면 예외를 발생시킨다.
+
+NESTED
+* 트랜잭션이 있으면 기존 트랜잭션 내의 nested 트랜잭션 형태로 메소드 실행. 자체적으로 Commit, Rollback이 가능. 트랜잭션이 없으면 REQUIRED 속성으로 실행
+
+**트랜잭션 격리 수준(Isolation Lavel)**<br>
+트랜잭션 간의 간섭으로부터 보호되는 정도를 나태남. 격리 수준이 높을수록 실행되는 트랜잭션 간의 간섭 정도가 낮고, 트랜잭션이 직렬적(Serializable)으로 실행된다는 의미. 반면에 격리 수준이 낮을수록 트랜잭션 간의 간섭 정도가 크고, 트랜잭션이 병렬적으로 실행되어 동시성이 커진다는 의미<br>
+<br>
+DEFAULT
+* 사용하는 데이터베이스에 의해 결정
+
+READ_UNCOMMITTED
+* 다른 트랜잭션이 Commit하지 않은 데이터를 읽을 수 있다. 잠금/해제가 일어나지 않으므로 데이터 일관성을 보장하지 않는다.
+
+....
+
+
+
+
+
+
+
+
+
  
