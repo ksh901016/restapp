@@ -33,15 +33,15 @@
     <!-- 도서 정보 등록 -->
     <insert id="insert" parameterType="devfun.bookstore.common.domain.Book">
         INSERT INTO BOOK (ID, TITLE, CREATOR, TYPE, DATE)
-        VALUES (#{id, jdbcType=BIGINT}, #{title, jdbcType=VATCHAR}, #{creator, jdbcType=VATCHAR}, #{type, jdbcType=VATCHAR}, #{date, jdbcType=TIMESTAMP})
+        VALUES (#{id, jdbcType=BIGINT}, #{title, jdbcType=VARCHAR}, #{creator, jdbcType=VARCHAR}, #{type, jdbcType=VARCHAR}, #{date, jdbcType=TIMESTAMP})
     </insert>
 
     <!-- 도서 정보 수정 -->
     <update id="updateByPrimaryKey" parameterType="devfun.bookstore.common.domain.Book">
         UPDATE BOOK
-        SET TITLE = #{title, jdbcType=VATCHAR}
-          , CREATOR = #{creator, jdbcType=VATCHAR}
-          , TYPE = #{type, jdbcType=VATCHAR}
+        SET TITLE = #{title, jdbcType=VARCHAR}
+          , CREATOR = #{creator, jdbcType=VARCHAR}
+          , TYPE = #{type, jdbcType=VARCHAR}
           , DATE = #{date, jdbcType=TIMESTAMP}
       WHERE ID = #{id, jdbcType=BIGINT}
     </update>

@@ -12,7 +12,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <version.junit>4.12</version.junit>
-        <version.slfj4j>1.7.5</version.slfj4j>
+        <version.slf4j>1.7.5</version.slf4j>
         <version.logback>1.0.13</version.logback>
         <version.spring>4.3.8.RELEASE</version.spring>
         <version.servlet>2.5</version.servlet>
@@ -68,24 +68,29 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${version.spring}</version>
-        </dependency>
-
-        <!-- Logging with SLF4J & LogBack -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${version.slfj4j}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-            <version>${version.slfj4j}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>commons-logging</artifactId>
                     <groupId>commons-logging</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <!-- Logging with SLF4J & LogBack -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${version.slf4j}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${version.slf4j}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${version.logback}</version>
         </dependency>
 
         <!-- Servlet -->
