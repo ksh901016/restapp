@@ -153,9 +153,23 @@ DEFAULT
 READ_UNCOMMITTED
 * 다른 트랜잭션이 Commit하지 않은 데이터를 읽을 수 있다. 잠금/해제가 일어나지 않으므로 데이터 일관성을 보장하지 않는다.
 
-....
+READ_COMMITTED
+* 반드시 트랜잭션 내에서 메소드가 실행되어야 한다. 만약 트랜잭션이 없다면 예외를 발생시킨다.
 
+REPETABLE_READ
+* 다른 트랜잭션이 Commit하지 않은 데이터를 읽을 수 없다. 한 트랜잭션 내에서 동일 객체를 여러 번 조회할 때 다른 값을 읽을 수 있다. 대부분의 데이터베이스에서 기본으로 지원하는 격리 수준이다.
 
+NOT_SUPPORTED
+* 다른 트랜잭션이 Commit하지 않은 데이터를 읽을 수 없다. 한 트랜잭션 내에서 동일 객체를 여러 번 조회할 때 항상 같은 값을 읽는 것을 보장한다.
+
+SERIALIZABLE
+* 가장 높은 격리 수준으로 어떠한 간섭도 허용하지 않는다. 잠금/해제로 인한 비용이 많이 들지만 신뢰할 만한 격리 수준을 제공한다.
+<br>
+
+### Service 구현하기
+interface Service 생성 (BookService.java)<br>
+AppConfig.java 설정 파일에 Service 추가하기 (@ComponentScan 이용)<br>
+TestCase 구현<br>
 
 
 
