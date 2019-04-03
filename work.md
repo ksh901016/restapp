@@ -170,8 +170,47 @@ SERIALIZABLE
 interface Service 생성 (BookService.java)<br>
 AppConfig.java 설정 파일에 Service 추가하기 (@ComponentScan 이용)<br>
 TestCase 구현<br>
+mvn -e test Dtest=BookServiceTest 실행<br>
+<br>
+
+### Presentation Layer
+웹 애플리케이션에서 사용자가 보는 웹페이지<br>
+REST 서비스라면 JSON이나 xml형식의 문서가 될 수 있다.<br>
+<br>
+* ModelAndView<br>
+주소(URL) 요청 형식을 REST처럼 바꾸고, 응답을 출력해 주는 View를 상황에 맞게 사용하면 된다.<br>
+
+* HTTPMessageConverter<br>
+HTTPMessageConverter는 자바 객체와 HTTP 요청/응답 몸체(Body)를 변환하는 역할을 한다. (HTTP 요청과 응답은 문자열 기반으로 이루어진다.)<br>
+스프링은 이런 문자열을 자바 객체로 변환해주는 기능을 제공해준다.
+<br>
+
+#### HttpMessageConverter 구현체
+* StringHttpMessageConverter<br>
+문자열을 읽고 쓴다. 기본적으로 text/* 미디어 타입을 지원하고, text/plain 이라는 컨텐트 타입(Content-Type)으로 쓴다.<br>
+
+* FormHttpMessageConverter<br>
+양식(Form)데이터를 처리한다. application/x-www-form-urlencoded라는 미디어 타입을 지원한다.<br>
+
+* MarshallingHttpMessageConverter<br>
+스프링의 Marshaller/Unmashaller를 이용하여 XML 데이터를 읽고 쓴다. application/xml 지원
+
+* MappingJackson2HttpMessageConverter<br>
+Jackson을 이용하여 JSON 데이터를 읽고 쓴다. application/json 미디어 타입 지원
 
 
+스프링에서 HTTPMessageConverter를 사용하기 위해서  @RequestBody 와 @ResponseBody 어노테이션을 제공한다.<br>
+@RequestBody => HTTP 요청 몸체를 자바 객체로 변환하는데 사용<br>
+@ResponseBody => 자바 객체를 HTTP 응답 몸체로 변환<br>
+
+#### Controller 클래스 테스트 방법
+MockMvc를 이용하여 테스트 한다. Mapper나 Service 클래스와는 달리 Controller 클래스는 WAS상에서 작동한다. 그래서 디플로이한 후, 직접 주소를 호출하여 테스트한다<br>
+이러한 불편함을 해소하기 위해서 MockMvc를 사용한다. MockMvc는 별도의 서버 없이 모조품(Mock)을 만들어서 Controller를 쉽게 테스트할 수 있도록 도와준다.
+<br>
+
+테스트 클래스 상단에 테스트할 대상이 웹 애플리케이션임을 알려주는 @WebAppConfiguration 어노테이션을 추가해야 한다.<br>
+@Before 어노테이션에서 MockMvc를 생성한다. (MockMvcBuilder 참고)<br>
+MockMvcRequestBuilders 클래스를 이용해서 요청을 생성할 수 있고, 앞서 생성한 mockMvc 인스턴스를 통해서 실행할 수 있다. 
 
 
 
