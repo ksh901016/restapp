@@ -212,6 +212,12 @@ MockMvc를 이용하여 테스트 한다. Mapper나 Service 클래스와는 달�
 @Before 어노테이션에서 MockMvc를 생성한다. (MockMvcBuilder 참고)<br>
 MockMvcRequestBuilders 클래스를 이용해서 요청을 생성할 수 있고, 앞서 생성한 mockMvc 인스턴스를 통해서 실행할 수 있다. 
 
+#### MappingJackson2HttpMessageConverter
+MappingJackson2HttpMessageConver는 내부적으로 Jackson이라는 JSON 라이브러리를 사용한다.<br>
+Jackson 라이브러리 특징
+* Stream API : 스트림 형식으로 데이터를 분석하고 생성하기 때문에 성능이 좋다.
+* Tree Model : XML DOM처럼 Node 형태로 데이터를 다룰 수 있기 때문에 유연성이 좋다.
+* Data Binding : POJO 기반의 자바 객체들을 JSON으로 변환시켜 준다.
 
 
 
