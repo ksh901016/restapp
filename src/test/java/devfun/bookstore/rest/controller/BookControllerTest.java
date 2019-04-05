@@ -26,7 +26,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {AppConfig.class, RestAppConfig.class})
 public class BookControllerTest {
 
-    Logger logger = LoggerFactory.getLogger(BookControllerTest.class);
     private MockMvc mockMvc;
     @Autowired
     BookController bookController;

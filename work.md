@@ -238,5 +238,22 @@ assertTrue(book.getCreator().indexOf("로이스") > -1);
 assertThat(book.getCreator(), containsString("로이스"));
 ```
 
+RestAppConfig 에 MappingJackson2HttpMessageConverter 추가하기<br>
+사용하기 위해서는 WebMvcConfigurer 인터페이스나 WebMvcConfigurerAdapter 클래스를 상속받아 필요한 설정 부분을 구성하면 된다.<br>
 
- 
+
+#### MarshallingHttpMessageConverter
+XML형색으로 데이터를 교환하는 REST 구성시 사용<br>
+스프링 OXM을 이용해서 객체와 XML간의 상호 변환 작업을 한다.<br>
+
+**Spring OXM**<br>
+스프링 OXM(Object Xml Mapping)은 XML 문서를 객체로 변환하거나, 객체를 XML 문서로 변환하는 기능을 제공한다.<br>
+객체 -> XML : XML Marshalling<br>
+Marshaller/Unmarshaller라는 두 개의 인터페이스로 동작하기 때문에 Object-Xml Mapping 프레임워크를 설정만으로 쉽게 변경할 수 있다.<br>
+```xml
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-oxm</artifactId>
+    <version>..</version>
+</dependency>
+```  
