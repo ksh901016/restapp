@@ -219,7 +219,24 @@ Jackson 라이브러리 특징
 * Tree Model : XML DOM처럼 Node 형태로 데이터를 다룰 수 있기 때문에 유연성이 좋다.
 * Data Binding : POJO 기반의 자바 객체들을 JSON으로 변환시켜 준다.
 
+hamcrest는 Matcher 라이브러리로, 값을 비교할 때 좀 더 편하게 해준다.<br>
+JUnit에서 assertEqauls 대신 assertThat을 사용해서 Matcher 구문을 사용할 수 있다.<br>
+```java
+<!-- berfore -->
+assertEquals("해리포터", book.getTitle());
+<!-- after -->
+assertThat("해리포터", is("해리포터"));
 
+<!-- berfore -->
+assertNotNull(book);
+<!-- after -->
+assertThat(book, is(notNullValue()));
+
+<!-- before -->
+assertTrue(book.getCreator().indexOf("로이스") > -1);
+<!-- after -->
+assertThat(book.getCreator(), containsString("로이스"));
+```
 
 
  
