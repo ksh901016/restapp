@@ -257,3 +257,10 @@ Marshaller/Unmarshaller라는 두 개의 인터페이스로 동작하기 때문�
     <version>..</version>
 </dependency>
 ```  
+
+**XML 어노테이션**<br>
+@XmlRootElement : XML의 Root Element 명을 정의한다.<br>
+@XmlElement : XML의 Element 명을 정의한다.<br>
+@XmlType : XML 스키마의 이름과 namespace를 정의한다. propOrder 속성을 이용해서 XML순서를 정의한다.<br>
+@XmlElementWrapper : 다른 XML 요소들을 감싸는 역할을 한다. List 같은 컬렉션 객체들을 XML 변환할 때 사용할 수 있다.
+

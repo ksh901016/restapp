@@ -2,6 +2,7 @@ package devfun.bookstore.rest.controller;
 
 import devfun.bookstore.common.domain.Book;
 import devfun.bookstore.common.service.BookService;
+import devfun.bookstore.rest.domain.BookList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -18,9 +19,9 @@ public class BookController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public List<Book> getBooks(){
+    public BookList getBooks(){
         List<Book> books = bookService.getBooks();
-        return books;
+        return new BookList(books);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
