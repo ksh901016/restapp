@@ -264,3 +264,20 @@ Marshaller/Unmarshaller라는 두 개의 인터페이스로 동작하기 때문�
 @XmlType : XML 스키마의 이름과 namespace를 정의한다. propOrder 속성을 이용해서 XML순서를 정의한다.<br>
 @XmlElementWrapper : 다른 XML 요소들을 감싸는 역할을 한다. List 같은 컬렉션 객체들을 XML 변환할 때 사용할 수 있다.
 
+
+### Content Negotiation
+REST에서는 하나의 리소스에 대해서 여러 형태의 Representation을 가질 수 있다. (어떤 요청은 application/json, 어떤 요청은 application/xml)<br>
+HTTP Header의 Accept를 이용하여 원하는 응답을 명시하면 서버에서는 클라이언트가 원하는 형태로 결과를 전달한다. 이러한 처리과정을 Content Noegoriation 이라고 한다.<br>
+**ContentNegoiationConfigurer**<br>
+WebMvcConfigurerAdapter의 ContentNegotiationConfigurer를 이용해서 미디어 타입을 설정할 수 있다.<br>
+```java
+@Override
+public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+	configurer.defaultContentType(MediaType.APPLICATION_JSON);
+}
+```
+
+웹브라우저 같은 특정 클라이언트는 HTTP Header의 Accept가 고정되어 있어서 Accept 기반으로 Content Negotiation을 할 수 없다.<br>
+다른 방법으로 URL 경로에 확장자를 붙이거나 요청파라미터에 형태를 명시함으로써 원하는 형태로 응답값을 처리한다.<br>
+`http://localhost/restapp/books.xml` 또는 `http//localhost/restapp/books?format=xml`
+
