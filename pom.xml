@@ -125,6 +125,12 @@
             <artifactId>jackson-databind</artifactId>
             <version>${version.jackson}</version>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-jaxb-annotations</artifactId>
+            <version>${version.jackson}</version>
+        </dependency>
+
         <!-- 테스트 편의를 위해 json-path와 hamcrest 라이브러리도 추가한다. -->
         <dependency>
             <groupId>org.hamcrest</groupId>

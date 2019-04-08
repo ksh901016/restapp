@@ -304,3 +304,38 @@ HTML form 태그 안에 _method 파라미터로 delete 값을 설정하고 POST 
     <input type="submit" value="Delete Book"/>
 </form>
 ```
+
+### ETag Support
+ETag는 HTTP 1.1 규약에 추가된 응답 Header이다.<br>
+캐싱 기능이 있는 애플리케이션(브라우저)은 이전에 받았던 ETag 값과 비교하여 같은 값이라면 불필요하게 리소스를 다시 내려받을 필요가 없다.<br>
+
+**응답 헤더** <BR>
+캐싱 기능이 있는 애플리케이션은 같은 자원을 다시 요청할 때, 요청 Header의 If-None-Match라는 헤더 값에 앞서 서버에서 받았던 ETag값을 설정해서 요청을 보내게 된다.<br>
+이때 해당 자원이 변경되지 않았다면 304(Not Modified)라는 HTTP 상태 값을 받게 된다.<br>
+
+스프링은 ETag를 지원하기 위해 ShallowEtagHeaderFilter 클래스를 제공한다.<br>
+ShallowEtagHeaderFilter 클래스는 일반적으로 ServletFilter 클래스로 응답 결과를 가지고 해시값을 생성해서 ETag값으로 반환해주는 기능을 한다.
+```xml
+<filter>
+	<filter-name>etagFilter</filter-name>
+	<filter-class>org.springframework.web.filter.ShallowEtagHeaderFilter</filter-class>
+</filter>
+<filter-mapping>
+	<filter-name>etagFilter</filter-name>
+	<url-pattern>/*</url-pattern>
+</filter-mapping>
+```
+
+### Json, Xml 예쁘게 출력하기
+`Json`<br>
+MappingJackson2HttpMessageConverter 클래스의 setPrettyPrint() 메소드 이용
+```java
+MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+converter.setPrettyPrint(true);
+```
+
+`xml`<br>
+Jaxb2Marshaller 클래스의 marshallerProperties에 JAXB_FORMATTED_OUTPUT 속성값을 지정해준다.<br>
+
+
+

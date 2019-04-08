@@ -1,5 +1,9 @@
 package devfun.bookstore.rest.config;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +17,10 @@ import org.springframework.web.servlet.config.annotation.ContentNegotiationConfi
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import javax.xml.bind.Marshaller;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Configuration
 @EnableWebMvc
@@ -32,6 +39,13 @@ public class RestAppConfig extends WebMvcConfigurerAdapter {
     @Bean
     public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter(){
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        ObjectMapper objectMapper = converter.getObjectMapper();
+        objectMapper.configure(DeserializationFeature.UNWRAP_ROOT_VALUE, true);
+        objectMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, true);
+
+        JaxbAnnotationModule module = new JaxbAnnotationModule();
+        objectMapper.registerModule(module);
+        converter.setPrettyPrint(true);
         return converter;
     }
 
@@ -43,6 +57,10 @@ public class RestAppConfig extends WebMvcConfigurerAdapter {
                 "devfun.bookstore.common.domain",
                 "devfun.bookstore.rest.domain"
         });
+
+        Map<String,Object> marshallerProperties = new HashMap<>();
+        marshallerProperties.put(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        jaxb2Marshaller.setMarshallerProperties(marshallerProperties);
         return jaxb2Marshaller;
     }
 

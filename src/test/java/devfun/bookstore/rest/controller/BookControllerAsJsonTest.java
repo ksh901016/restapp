@@ -115,14 +115,5 @@ public class BookControllerAsJsonTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(3)));
-
-        MockHttpServletRequestBuilder requestBuilder1
-                = MockMvcRequestBuilders
-                .get("/books")
-                .accept(MediaType.APPLICATION_JSON);
-        this.mockMvc.perform(requestBuilder1).andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", Matchers.hasSize(2)));
-    }
+       }
 }

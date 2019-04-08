@@ -19,9 +19,9 @@ public class BookController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public BookList getBooks(){
+    public List<Book> getBooks(){
         List<Book> books = bookService.getBooks();
-        return new BookList(books);
+        return books;
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
