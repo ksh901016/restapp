@@ -281,3 +281,26 @@ public void configureContentNegotiation(ContentNegotiationConfigurer configurer)
 다른 방법으로 URL 경로에 확장자를 붙이거나 요청파라미터에 형태를 명시함으로써 원하는 형태로 응답값을 처리한다.<br>
 `http://localhost/restapp/books.xml` 또는 `http//localhost/restapp/books?format=xml`
 
+### HTTP Method Conversion
+REST에서 해당 자원에 대한 행위(CRUD) 할 때 HTTP Request(GET, POST, PUT, DELETE)를 사용한다. 하지만 GET, POST만 지원하는 클라이언트가 있다면 , PUT, DELETE메소드는 사용하지 못한다.<BR>
+이런 경우를 대비해서 스프링에서는 HiddenHttpMethodFilter 클래스를 제공한다. ServletFilter 클래스로 POST 메소드의 파라미터로 넘어온 _method 값을 HTTP Method로 변환해주는 기능이다.<br>
+HTML form 태그 안에 _method 파라미터로 delete 값을 설정하고 POST 메소드를 호출하면 요청받은 HiddenHttpMethodFilter 클래스에 의해 DELETE 메소드로 변환되어 요청을 처리하게 된다.<br>
+**web.xml**
+```xml
+<!-- HTTP Method Conversion -->
+<filter>
+	<filter-name>httpMethodFilter</filter-name>
+	<filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+</filter>
+
+<filter-mapping>
+	<filter-name>httpMethodFilter</filter-name>
+	<url-pattern>/*</url-pattern>
+</filter-mapping>
+```
+```html
+<form method="post">
+    <input type="hidden" name="_method" value="delete">
+    <input type="submit" value="Delete Book"/>
+</form>
+```
