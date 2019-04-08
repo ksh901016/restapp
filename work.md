@@ -337,5 +337,13 @@ converter.setPrettyPrint(true);
 `xml`<br>
 Jaxb2Marshaller 클래스의 marshallerProperties에 JAXB_FORMATTED_OUTPUT 속성값을 지정해준다.<br>
 
+### 예외처리하기
+@ExceptionHandler 와 @ControllerAdvice를 사용한다.<br>
+@ExceptionHandler<br>
+=> Controller 수준에서 예외처리를 할 수 있다.<br>
+
+@ControllerAdvice<br>
+Spring 3.2 부터는 @ControllerAdvice 어노테이션을 이용해서 전체 애플리케이션의 예외를 처리할 수 있는 기능을 공유한다.<br>
+또한 ResponseEntity 형식을 사용할 수 있는 유연성까지 제공하기 때문에 REST 예외 처리를 더 쉽게 할 수 있다.
 
 

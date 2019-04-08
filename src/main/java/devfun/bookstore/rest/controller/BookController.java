@@ -2,7 +2,7 @@ package devfun.bookstore.rest.controller;
 
 import devfun.bookstore.common.domain.Book;
 import devfun.bookstore.common.service.BookService;
-import devfun.bookstore.rest.domain.BookList;
+import devfun.bookstore.rest.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -28,6 +28,9 @@ public class BookController {
     @ResponseBody
     public Book getBook(@PathVariable("id") Long id){
         Book book = bookService.getBook(id);
+        if(book == null){
+            throw new ResourceNotFoundException();
+        }
         return book;
     }
 
@@ -58,7 +61,6 @@ public class BookController {
         deletedBook.setId(id);
         return deletedBook;
     }
-
 
     /* test 용
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
