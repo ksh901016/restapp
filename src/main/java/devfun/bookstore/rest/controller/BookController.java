@@ -2,13 +2,18 @@ package devfun.bookstore.rest.controller;
 
 import devfun.bookstore.common.domain.Book;
 import devfun.bookstore.common.service.BookService;
+import devfun.bookstore.rest.BookResourceAssembler;
+import devfun.bookstore.rest.domain.BookResource;
 import devfun.bookstore.rest.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @Controller
 @RequestMapping(value = "/books")
@@ -17,11 +22,24 @@ public class BookController {
     @Autowired
     BookService bookService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    /*@RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public List<Book> getBooks(){
         List<Book> books = bookService.getBooks();
         return books;
+    }*/
+
+    // Resources 사용
+    @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
+    public Resources<BookResource> getBooks(){
+        List<Book> books = bookService.getBooks();
+
+        BookResourceAssembler assembler = new BookResourceAssembler();
+        List<BookResource> resources = assembler.toResources(books);
+
+        Resources<BookResource> wrapped = new Resources<BookResource>(resources, linkTo(BookController.class).withSelfRel());
+        return wrapped;
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)

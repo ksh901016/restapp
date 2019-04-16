@@ -56,4 +56,18 @@ public class RestResponseEntityExceptionHandlerTest {
                 .andExpect(jsonPath("$.code", is("404")))
                 .andExpect(jsonPath("$.message", is("해당 자원을 찾을 수 없습니다.")));
     }
+
+    @Test
+    public void testResourceNotFoundExceptionAsXml() throws Exception{
+        MockHttpServletRequestBuilder requestBuilder
+                = MockMvcRequestBuilders
+                .get("/books/99")
+                .accept(MediaType.APPLICATION_XML);
+
+        this.mockMvc.perform(requestBuilder).andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_XML))
+                .andExpect(xpath("/error/code").string("404"))
+                .andExpect(xpath("/error/message").string("해당 자원을 찾을 수 없습니다."));
+    }
 }

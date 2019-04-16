@@ -347,3 +347,22 @@ Spring 3.2 부터는 @ControllerAdvice 어노테이션을 이용해서 전체 �
 또한 ResponseEntity 형식을 사용할 수 있는 유연성까지 제공하기 때문에 REST 예외 처리를 더 쉽게 할 수 있다.
 
 
+### HATEOAS(Hypermedia as the Engine of Application State)
+클라이언트 요청에 대해 링크 정보를 포함하는 표현으로 응답해야 하는 것을 뜻함<br>
+ex) 사용자가 웹 브라우저를 통해서 HTML 페이지를 볼 때 다른 곳으로 이동하는 링크가 있다. 게시판 목록 페이지의 글 제목에 상세 페이지로 이동하는 링크가 포함된 것이다.<br>
+이처럼 REST도 자원을 표현할 때 관계되는 링크 정보를 함께 포함하자는 것이다.<br>
+
+### Spring HATEOAS
+ResourceSupport 클래스를 상속받는 BookResource를 생성<br>
+Book 클래스의 정보를 BookResource 클래스로 복사하는 BookResourceAssember를 생성<br>
+생성한 클래스들을 가지고 컨트롤러 클래스 용도에 맞게 사용<br>
+```xml
+<dependency>
+    <groupId>org.springframework.hateoas</groupId>
+    <artifactId>spring-hateoas</artifactId>
+    <version>0.8.0.RELEASE</version>
+</dependency>
+```
+
+
+

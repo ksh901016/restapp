@@ -81,6 +81,12 @@
             <artifactId>spring-oxm</artifactId>
             <version>${version.spring}</version>
         </dependency>
+        <!-- HATEOAS -->
+        <dependency>
+            <groupId>org.springframework.hateoas</groupId>
+            <artifactId>spring-hateoas</artifactId>
+            <version>0.8.0.RELEASE</version>
+        </dependency>
 
         <!-- Logging with SLF4J & LogBack -->
         <dependency>
