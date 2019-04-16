@@ -39,7 +39,8 @@ public class RestResponseEntityExceptionHandlerTest {
         CharacterEncodingFilter filter = new CharacterEncodingFilter();
         filter.setEncoding("UTF-8");
         filter.setForceEncoding(true);
-        mockMvc = MockMvcBuilders.standaloneSetup(bookController).addFilter(filter).build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).addFilter(filter).build();
+        //mockMvc = MockMvcBuilders.standaloneSetup(bookController).addFilter(filter).build();
     }
 
     @Test

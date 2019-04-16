@@ -340,7 +340,7 @@ Jaxb2Marshaller 클래스의 marshallerProperties에 JAXB_FORMATTED_OUTPUT 속�
 ### 예외처리하기
 @ExceptionHandler 와 @ControllerAdvice를 사용한다.<br>
 @ExceptionHandler<br>
-=> Controller 수준에서 예외처리를 할 수 있다.<br>
+=> Controller 수준에서 예외처리를 할 수 있다. (단점이자 장점)<br>
 
 @ControllerAdvice<br>
 Spring 3.2 부터는 @ControllerAdvice 어노테이션을 이용해서 전체 애플리케이션의 예외를 처리할 수 있는 기능을 공유한다.<br>
