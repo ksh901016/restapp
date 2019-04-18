@@ -90,7 +90,59 @@ Connection conn = ds.getConnection();
 <br>
 DatatSource 생성, 트랜잭션 관리자 생성, SqlSessionFacotry 생성
 
+### Persistence Layer 구축하기
+MyBatis 3.2를 이용하여 구축
+
+**영속성(Persistence)계층이란?**<br>
+영속성(Persistence)은 애플리케이션의 생명주기를 연장해주는 데이터 속성으로, 애플리케이션이 그 실행을 멈춘 후에도 데이터를 사용할 수 있게 해준다.<br>
+
+**DAO(Data Access Object)**<br>
+JDBC를 이용하여 개발할 수 있지만 퍼시스턴스 계층을 구현할 때 여러가지 불편함 때문에 ORM(Object-Relational Mapping) 이나 퍼시스턴스 프레임워크를 사용하는 것이 좋음.<br>
+JDBC를 이용할 경우 직접 구현해야 했던 Connection 생성, Statement 생성, ResultSet 처리, SQLException 처리 같은 반복적인 작업들을 ORM 등이 대신해 줌으로써 편리하게 개발할 수 있다.<br>
+보통 퍼시스턴스 계층을 구현하는 자바 클래스를 DAO(Data Access Object)라 부른다.
+
+**pom.xml 설정**
+```xml
+<properties>
+	<version.mybatis>3.2.3</version.mybatis>
+	<version.mybatis.spring>1.2.1</version.mybatis.spring>
+</properties>
+
+<dependencies>
+	...
+	<!-- MyBatis -->
+	<dependency>
+	    <groupId>org.mybatis</groupId>
+	    <artifactId>mybatis</artifactId>
+	    <version>${version.mybatis}</version>
+	</dependency>
+
+	<!-- MyBatis 와 Spring 연동시 필요 -->
+	<dependency>
+	    <groupId>org.mybatis</groupId>
+	    <artifactId>mybatis-spring</artifactId>
+	    <version>${version.mybatis.spring}</version>
+	</dependency>
+
+	<!-- HSQLDB -->
+	<!-- 메모리기반 임베디드 데이터베이스인 HSQLDB -->
+	<dependency>
+	    <groupId>org.hsqldb</groupId>
+	    <artifactId>hsqldb</artifactId>
+	    <version>2.3.1</version>
+	</dependency>
+        <!-- 스프링에서 지원하는 EmbeddedDatabaseBuilder -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${version.spring}</version>
+        </dependency>
+
+	...
+</<dependencies>
+```
 ### AppConfig 설정에 DataSource 추가하기
+
 ### Mapper 구현하기
  Mapper.xml 구현 -> Mapper interface 생성 -> AppConfig 설정 파일에 Mapper 추가<br>
  
