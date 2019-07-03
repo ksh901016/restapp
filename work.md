@@ -90,7 +90,59 @@ Connection conn = ds.getConnection();
 <br>
 DatatSource 생성, 트랜잭션 관리자 생성, SqlSessionFacotry 생성
 
+### Persistence Layer 구축하기
+MyBatis 3.2를 이용하여 구축
+
+**영속성(Persistence)계층이란?**<br>
+영속성(Persistence)은 애플리케이션의 생명주기를 연장해주는 데이터 속성으로, 애플리케이션이 그 실행을 멈춘 후에도 데이터를 사용할 수 있게 해준다.<br>
+
+**DAO(Data Access Object)**<br>
+JDBC를 이용하여 개발할 수 있지만 퍼시스턴스 계층을 구현할 때 여러가지 불편함 때문에 ORM(Object-Relational Mapping) 이나 퍼시스턴스 프레임워크를 사용하는 것이 좋음.<br>
+JDBC를 이용할 경우 직접 구현해야 했던 Connection 생성, Statement 생성, ResultSet 처리, SQLException 처리 같은 반복적인 작업들을 ORM 등이 대신해 줌으로써 편리하게 개발할 수 있다.<br>
+보통 퍼시스턴스 계층을 구현하는 자바 클래스를 DAO(Data Access Object)라 부른다.
+
+**pom.xml 설정**
+```xml
+<properties>
+	<version.mybatis>3.2.3</version.mybatis>
+	<version.mybatis.spring>1.2.1</version.mybatis.spring>
+</properties>
+
+<dependencies>
+	...
+	<!-- MyBatis -->
+	<dependency>
+	    <groupId>org.mybatis</groupId>
+	    <artifactId>mybatis</artifactId>
+	    <version>${version.mybatis}</version>
+	</dependency>
+
+	<!-- MyBatis 와 Spring 연동시 필요 -->
+	<dependency>
+	    <groupId>org.mybatis</groupId>
+	    <artifactId>mybatis-spring</artifactId>
+	    <version>${version.mybatis.spring}</version>
+	</dependency>
+
+	<!-- HSQLDB -->
+	<!-- 메모리기반 임베디드 데이터베이스인 HSQLDB -->
+	<dependency>
+	    <groupId>org.hsqldb</groupId>
+	    <artifactId>hsqldb</artifactId>
+	    <version>2.3.1</version>
+	</dependency>
+        <!-- 스프링에서 지원하는 EmbeddedDatabaseBuilder -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${version.spring}</version>
+        </dependency>
+
+	...
+</<dependencies>
+```
 ### AppConfig 설정에 DataSource 추가하기
+
 ### Mapper 구현하기
  Mapper.xml 구현 -> Mapper interface 생성 -> AppConfig 설정 파일에 Mapper 추가<br>
  
@@ -212,8 +264,157 @@ MockMvc를 이용하여 테스트 한다. Mapper나 Service 클래스와는 달�
 @Before 어노테이션에서 MockMvc를 생성한다. (MockMvcBuilder 참고)<br>
 MockMvcRequestBuilders 클래스를 이용해서 요청을 생성할 수 있고, 앞서 생성한 mockMvc 인스턴스를 통해서 실행할 수 있다. 
 
+#### MappingJackson2HttpMessageConverter
+MappingJackson2HttpMessageConver는 내부적으로 Jackson이라는 JSON 라이브러리를 사용한다.<br>
+Jackson 라이브러리 특징
+* Stream API : 스트림 형식으로 데이터를 분석하고 생성하기 때문에 성능이 좋다.
+* Tree Model : XML DOM처럼 Node 형태로 데이터를 다룰 수 있기 때문에 유연성이 좋다.
+* Data Binding : POJO 기반의 자바 객체들을 JSON으로 변환시켜 준다.
+
+hamcrest는 Matcher 라이브러리로, 값을 비교할 때 좀 더 편하게 해준다.<br>
+JUnit에서 assertEqauls 대신 assertThat을 사용해서 Matcher 구문을 사용할 수 있다.<br>
+```java
+<!-- berfore -->
+assertEquals("해리포터", book.getTitle());
+<!-- after -->
+assertThat("해리포터", is("해리포터"));
+
+<!-- berfore -->
+assertNotNull(book);
+<!-- after -->
+assertThat(book, is(notNullValue()));
+
+<!-- before -->
+assertTrue(book.getCreator().indexOf("로이스") > -1);
+<!-- after -->
+assertThat(book.getCreator(), containsString("로이스"));
+```
+
+RestAppConfig 에 MappingJackson2HttpMessageConverter 추가하기<br>
+사용하기 위해서는 WebMvcConfigurer 인터페이스나 WebMvcConfigurerAdapter 클래스를 상속받아 필요한 설정 부분을 구성하면 된다.<br>
+
+
+#### MarshallingHttpMessageConverter
+XML형색으로 데이터를 교환하는 REST 구성시 사용<br>
+스프링 OXM을 이용해서 객체와 XML간의 상호 변환 작업을 한다.<br>
+
+**Spring OXM**<br>
+스프링 OXM(Object Xml Mapping)은 XML 문서를 객체로 변환하거나, 객체를 XML 문서로 변환하는 기능을 제공한다.<br>
+객체 -> XML : XML Marshalling<br>
+Marshaller/Unmarshaller라는 두 개의 인터페이스로 동작하기 때문에 Object-Xml Mapping 프레임워크를 설정만으로 쉽게 변경할 수 있다.<br>
+```xml
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-oxm</artifactId>
+    <version>..</version>
+</dependency>
+```  
+
+**XML 어노테이션**<br>
+@XmlRootElement : XML의 Root Element 명을 정의한다.<br>
+@XmlElement : XML의 Element 명을 정의한다.<br>
+@XmlType : XML 스키마의 이름과 namespace를 정의한다. propOrder 속성을 이용해서 XML순서를 정의한다.<br>
+@XmlElementWrapper : 다른 XML 요소들을 감싸는 역할을 한다. List 같은 컬렉션 객체들을 XML 변환할 때 사용할 수 있다.
+
+
+### Content Negotiation
+REST에서는 하나의 리소스에 대해서 여러 형태의 Representation을 가질 수 있다. (어떤 요청은 application/json, 어떤 요청은 application/xml)<br>
+HTTP Header의 Accept를 이용하여 원하는 응답을 명시하면 서버에서는 클라이언트가 원하는 형태로 결과를 전달한다. 이러한 처리과정을 Content Noegoriation 이라고 한다.<br>
+**ContentNegoiationConfigurer**<br>
+WebMvcConfigurerAdapter의 ContentNegotiationConfigurer를 이용해서 미디어 타입을 설정할 수 있다.<br>
+```java
+@Override
+public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+	configurer.defaultContentType(MediaType.APPLICATION_JSON);
+}
+```
+
+웹브라우저 같은 특정 클라이언트는 HTTP Header의 Accept가 고정되어 있어서 Accept 기반으로 Content Negotiation을 할 수 없다.<br>
+다른 방법으로 URL 경로에 확장자를 붙이거나 요청파라미터에 형태를 명시함으로써 원하는 형태로 응답값을 처리한다.<br>
+`http://localhost/restapp/books.xml` 또는 `http//localhost/restapp/books?format=xml`
+
+### HTTP Method Conversion
+REST에서 해당 자원에 대한 행위(CRUD) 할 때 HTTP Request(GET, POST, PUT, DELETE)를 사용한다. 하지만 GET, POST만 지원하는 클라이언트가 있다면 , PUT, DELETE메소드는 사용하지 못한다.<BR>
+이런 경우를 대비해서 스프링에서는 HiddenHttpMethodFilter 클래스를 제공한다. ServletFilter 클래스로 POST 메소드의 파라미터로 넘어온 _method 값을 HTTP Method로 변환해주는 기능이다.<br>
+HTML form 태그 안에 _method 파라미터로 delete 값을 설정하고 POST 메소드를 호출하면 요청받은 HiddenHttpMethodFilter 클래스에 의해 DELETE 메소드로 변환되어 요청을 처리하게 된다.<br>
+**web.xml**
+```xml
+<!-- HTTP Method Conversion -->
+<filter>
+	<filter-name>httpMethodFilter</filter-name>
+	<filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+</filter>
+
+<filter-mapping>
+	<filter-name>httpMethodFilter</filter-name>
+	<url-pattern>/*</url-pattern>
+</filter-mapping>
+```
+```html
+<form method="post">
+    <input type="hidden" name="_method" value="delete">
+    <input type="submit" value="Delete Book"/>
+</form>
+```
+
+### ETag Support
+ETag는 HTTP 1.1 규약에 추가된 응답 Header이다.<br>
+캐싱 기능이 있는 애플리케이션(브라우저)은 이전에 받았던 ETag 값과 비교하여 같은 값이라면 불필요하게 리소스를 다시 내려받을 필요가 없다.<br>
+
+**응답 헤더** <BR>
+캐싱 기능이 있는 애플리케이션은 같은 자원을 다시 요청할 때, 요청 Header의 If-None-Match라는 헤더 값에 앞서 서버에서 받았던 ETag값을 설정해서 요청을 보내게 된다.<br>
+이때 해당 자원이 변경되지 않았다면 304(Not Modified)라는 HTTP 상태 값을 받게 된다.<br>
+
+스프링은 ETag를 지원하기 위해 ShallowEtagHeaderFilter 클래스를 제공한다.<br>
+ShallowEtagHeaderFilter 클래스는 일반적으로 ServletFilter 클래스로 응답 결과를 가지고 해시값을 생성해서 ETag값으로 반환해주는 기능을 한다.
+```xml
+<filter>
+	<filter-name>etagFilter</filter-name>
+	<filter-class>org.springframework.web.filter.ShallowEtagHeaderFilter</filter-class>
+</filter>
+<filter-mapping>
+	<filter-name>etagFilter</filter-name>
+	<url-pattern>/*</url-pattern>
+</filter-mapping>
+```
+
+### Json, Xml 예쁘게 출력하기
+`Json`<br>
+MappingJackson2HttpMessageConverter 클래스의 setPrettyPrint() 메소드 이용
+```java
+MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+converter.setPrettyPrint(true);
+```
+
+`xml`<br>
+Jaxb2Marshaller 클래스의 marshallerProperties에 JAXB_FORMATTED_OUTPUT 속성값을 지정해준다.<br>
+
+### 예외처리하기
+@ExceptionHandler 와 @ControllerAdvice를 사용한다.<br>
+@ExceptionHandler<br>
+=> Controller 수준에서 예외처리를 할 수 있다. (단점이자 장점)<br>
+
+@ControllerAdvice<br>
+Spring 3.2 부터는 @ControllerAdvice 어노테이션을 이용해서 전체 애플리케이션의 예외를 처리할 수 있는 기능을 공유한다.<br>
+또한 ResponseEntity 형식을 사용할 수 있는 유연성까지 제공하기 때문에 REST 예외 처리를 더 쉽게 할 수 있다.
+
+
+### HATEOAS(Hypermedia as the Engine of Application State)
+클라이언트 요청에 대해 링크 정보를 포함하는 표현으로 응답해야 하는 것을 뜻함<br>
+ex) 사용자가 웹 브라우저를 통해서 HTML 페이지를 볼 때 다른 곳으로 이동하는 링크가 있다. 게시판 목록 페이지의 글 제목에 상세 페이지로 이동하는 링크가 포함된 것이다.<br>
+이처럼 REST도 자원을 표현할 때 관계되는 링크 정보를 함께 포함하자는 것이다.<br>
+
+### Spring HATEOAS
+ResourceSupport 클래스를 상속받는 BookResource를 생성<br>
+Book 클래스의 정보를 BookResource 클래스로 복사하는 BookResourceAssember를 생성<br>
+생성한 클래스들을 가지고 컨트롤러 클래스 용도에 맞게 사용<br>
+```xml
+<dependency>
+    <groupId>org.springframework.hateoas</groupId>
+    <artifactId>spring-hateoas</artifactId>
+    <version>0.8.0.RELEASE</version>
+</dependency>
+```
 
 
 
-
- 

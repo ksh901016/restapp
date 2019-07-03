@@ -3,10 +3,14 @@ package devfun.bookstore.common.domain;
 import org.pojomatic.Pojomatic;
 import org.pojomatic.annotations.AutoProperty;
 
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 import java.util.Date;
 import java.util.Objects;
 
 @AutoProperty
+@XmlRootElement(name = "book")
+@XmlType(propOrder = {"id", "title", "creator", "type", "date"})
 public class Book {
     private Long id;
     private String title;
