@@ -16,7 +16,7 @@
         <version.logback>1.0.13</version.logback>
         <version.spring>4.3.8.RELEASE</version.spring>
         <version.servlet>3.1.0</version.servlet>
-        <version.mybatis>3.2.3</version.mybatis>
+        <version.mybatis>3.5.6</version.mybatis>
         <version.mybatis.spring>1.2.1</version.mybatis.spring>
         <version.jackson>2.5.2</version.jackson>
     </properties>
