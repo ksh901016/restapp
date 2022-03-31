@@ -14,7 +14,7 @@
         <version.junit>4.12</version.junit>
         <version.slf4j>1.7.5</version.slf4j>
         <version.logback>1.0.13</version.logback>
-        <version.spring>4.3.8.RELEASE</version.spring>
+        <version.spring>5.3.18</version.spring>
         <version.servlet>3.1.0</version.servlet>
         <version.mybatis>3.2.3</version.mybatis>
         <version.mybatis.spring>1.2.1</version.mybatis.spring>
